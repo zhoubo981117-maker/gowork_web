@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>求职看板</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>求职看板</h1>
+  </header>
+
+  <main class="board" id="board">
+    <div class="column" data-status="todo">
+      <div class="col-header">
+        <span class="col-title">待投递</span>
+        <button class="add-btn" data-status="todo">＋</button>
+      </div>
+      <div class="card-list" id="col-todo" data-status="todo"></div>
+    </div>
+    <div class="column" data-status="applied">
+      <div class="col-header">
+        <span class="col-title">已投递</span>
+        <button class="add-btn" data-status="applied">＋</button>
+      </div>
+      <div class="card-list" id="col-applied" data-status="applied"></div>
+    </div>
+    <div class="column" data-status="interview">
+      <div class="col-header">
+        <span class="col-title">面试中</span>
+        <button class="add-btn" data-status="interview">＋</button>
+      </div>
+      <div class="card-list" id="col-interview" data-status="interview"></div>
+    </div>
+    <div class="column" data-status="offer">
+      <div class="col-header">
+        <span class="col-title">收到 Offer</span>
+        <button class="add-btn" data-status="offer">＋</button>
+      </div>
+      <div class="card-list" id="col-offer" data-status="offer"></div>
+    </div>
+    <div class="column" data-status="rejected">
+      <div class="col-header">
+        <span class="col-title">已拒绝</span>
+        <button class="add-btn" data-status="rejected">＋</button>
+      </div>
+      <div class="card-list" id="col-rejected" data-status="rejected"></div>
+    </div>
+  </main>
+
+  <!-- ── Detail panel ─────────────────────────────────────── -->
+  <aside class="detail-panel" id="detail-panel" hidden>
+    <div class="panel-header">
+      <span id="panel-title">岗位详情</span>
+      <button id="close-panel" title="关闭">✕</button>
+    </div>
+    <div class="panel-body">
+      <div class="form-group">
+        <label>公司</label>
+        <input id="edit-company" type="text" />
+      </div>
+      <div class="form-group">
+        <label>岗位</label>
+        <input id="edit-role" type="text" />
+      </div>
+      <div class="form-group">
+        <label>备注</label>
+        <textarea id="edit-notes" rows="4"></textarea>
+      </div>
+      <div class="panel-actions">
+        <button id="save-card" class="btn-primary">保存</button>
+        <button id="delete-card" class="btn-danger">删除</button>
+      </div>
+
+      <hr />
+
+      <div class="section-title">JD 截图</div>
+      <div class="paste-zone" id="paste-zone" tabindex="0">
+        点击此处，然后 Ctrl+V 粘贴截图
+      </div>
+      <div class="attachments-grid" id="images-grid"></div>
+
+      <div class="section-title" style="margin-top:16px;">简历文件</div>
+      <label class="file-label">
+        选择文件（PDF / Word）
+        <input type="file" id="file-input" accept=".pdf,.docx" />
+      </label>
+      <div class="files-list" id="files-list"></div>
+    </div>
+  </aside>
+
+  <!-- ── Add card modal ──────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay" hidden>
+    <div class="modal">
+      <h3>新建岗位</h3>
+      <input id="new-company" type="text" placeholder="公司名称" />
+      <input id="new-role" type="text" placeholder="岗位名称" />
+      <div class="modal-actions">
+        <button id="confirm-add" class="btn-primary">创建</button>
+        <button id="cancel-add">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/sortable.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
