@@ -12,6 +12,11 @@ dependencies = [
   "uvicorn[standard]>=0.30.0",
   "pydantic>=2.7.0",
   "python-multipart>=0.0.9",
+  # Cloud-only (Vercel installs deps from this file via uv). Linux marker keeps
+  # them off local Windows / the PyInstaller .exe, where they are unused and
+  # libsql has no wheel. See backend/job_search_agent/storage.py (lazy import).
+  "libsql>=0.1.11; sys_platform == 'linux'",
+  "vercel_blob>=0.4.2; sys_platform == 'linux'",
 ]
 
 [project.optional-dependencies]
