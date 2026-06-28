@@ -28,6 +28,21 @@ app.include_router(cards.router)
 app.include_router(files.router)
 
 
+@app.get("/api/_diag")
+def _diag():
+    """Temporary diagnostic: reports presence of env vars (no secret values)."""
+    import os
+
+    return {
+        "use_turso": storage.USE_TURSO,
+        "has_turso_url": bool(os.environ.get("TURSO_DATABASE_URL")),
+        "has_turso_token": bool(os.environ.get("TURSO_AUTH_TOKEN")),
+        "has_blob_token": bool(os.environ.get("BLOB_READ_WRITE_TOKEN")),
+        "env_keys_with_turso": sorted(k for k in os.environ if "TURSO" in k.upper()),
+        "env_keys_with_blob": sorted(k for k in os.environ if "BLOB" in k.upper()),
+    }
+
+
 @app.get("/")
 def index():
     return FileResponse(str(_frontend_dir() / "index.html"))
