@@ -1,3 +1,4 @@
+import os
 import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -22,25 +23,15 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="Job Search Kanban", lifespan=lifespan)
+# On Vercel the ASGI lifespan startup can race with the first request body,
+# causing an intermittent 400 on the first POST after a cold start. There we
+# initialise the DB at import time (see api/index.py) and skip the lifespan;
+# locally and in tests we keep the lifespan so each app instance initialises.
+_lifespan = None if os.environ.get("VERCEL") else lifespan
+app = FastAPI(title="Job Search Kanban", lifespan=_lifespan)
 
 app.include_router(cards.router)
 app.include_router(files.router)
-
-
-@app.get("/api/_diag")
-def _diag():
-    """Temporary diagnostic: reports presence of env vars (no secret values)."""
-    import os
-
-    return {
-        "use_turso": storage.USE_TURSO,
-        "has_turso_url": bool(os.environ.get("TURSO_DATABASE_URL")),
-        "has_turso_token": bool(os.environ.get("TURSO_AUTH_TOKEN")),
-        "has_blob_token": bool(os.environ.get("BLOB_READ_WRITE_TOKEN")),
-        "env_keys_with_turso": sorted(k for k in os.environ if "TURSO" in k.upper()),
-        "env_keys_with_blob": sorted(k for k in os.environ if "BLOB" in k.upper()),
-    }
 
 
 @app.get("/")
