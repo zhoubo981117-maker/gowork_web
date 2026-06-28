@@ -1,4 +1,3 @@
-import os
 import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -23,12 +22,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-# On Vercel the ASGI lifespan startup can race with the first request body,
-# causing an intermittent 400 on the first POST after a cold start. There we
-# initialise the DB at import time (see api/index.py) and skip the lifespan;
-# locally and in tests we keep the lifespan so each app instance initialises.
-_lifespan = None if os.environ.get("VERCEL") else lifespan
-app = FastAPI(title="Job Search Kanban", lifespan=_lifespan)
+app = FastAPI(title="Job Search Kanban", lifespan=lifespan)
 
 app.include_router(cards.router)
 app.include_router(files.router)
